@@ -137,17 +137,17 @@ export function SermulherView({ data }: SermulherViewProps) {
   ];
 
   return (
-    <div className="space-y-6 bg-white">
+    <div className="space-y-8 bg-gradient-to-br from-rose-950 via-purple-950 to-slate-950 px-4 sm:px-6 lg:px-8">
       <Image
         src="/rodape.jpeg"
-        alt="Header Sermulher"
-        width={1200}
+        alt="Header"
+        width={1000}
         height={150}
-        className="mx-auto h-auto w-full max-w-5xl rounded-xl object-contain"
+        className="mx-auto h-auto object-contain mb-8"
         priority
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-8 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl font-bold text-purple-900">
@@ -298,7 +298,7 @@ export function SermulherView({ data }: SermulherViewProps) {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-8 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-xl font-bold text-slate-900">
@@ -333,10 +333,7 @@ export function SermulherView({ data }: SermulherViewProps) {
                     tick={{ fill: "#475569", fontSize: 12 }}
                   />
                   <Tooltip
-                    formatter={(value, name, props) => [
-                      `${value}%`,
-                      "Percentual",
-                    ]}
+                    formatter={(value: number) => `${value}%`}
                     contentStyle={{
                       background: "#ffffff",
                       border: "1px solid #e2e8f0",
@@ -388,7 +385,7 @@ export function SermulherView({ data }: SermulherViewProps) {
         </Card>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-8 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-xl font-bold text-slate-900">
@@ -447,10 +444,10 @@ export function SermulherView({ data }: SermulherViewProps) {
 
       <Image
         src="/rodape.jpeg"
-        alt="Encerramento Sermulher"
-        width={1200}
-        height={120}
-        className="mx-auto h-auto w-full max-w-5xl rounded-xl object-contain"
+        alt="Footer"
+        width={1000}
+        height={150}
+        className="mx-auto h-auto object-contain mt-12"
       />
     </div>
   );
