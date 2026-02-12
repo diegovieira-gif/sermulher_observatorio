@@ -12,15 +12,13 @@
   --font-display: var(--font-fraunces);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #4c0519 0%, #2e1065 50%, #0f172a 100%);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
 }

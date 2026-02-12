@@ -67,7 +67,7 @@ function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "rounded-3xl border border-slate-200 bg-white shadow-sm",
+        "rounded-3xl border border-slate-200 bg-white bg-opacity-100 text-slate-900 shadow-xl",
         className,
       )}
       {...props}
@@ -137,16 +137,7 @@ export function SermulherView({ data }: SermulherViewProps) {
   ];
 
   return (
-    <div className="space-y-8 bg-gradient-to-br from-rose-950 via-purple-950 to-slate-950 px-4 sm:px-6 lg:px-8">
-      <Image
-        src="/rodape.jpeg"
-        alt="Header"
-        width={1000}
-        height={150}
-        className="mx-auto h-auto object-contain mb-8"
-        priority
-      />
-
+    <div className="w-full space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <div className="grid gap-8 lg:grid-cols-2">
         <Card>
           <CardHeader>
@@ -389,29 +380,29 @@ export function SermulherView({ data }: SermulherViewProps) {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-xl font-bold text-slate-900">
-              Sala Azul (Detalhamento)
+              Sala Azul (Jan/2026)
             </CardTitle>
-            <CardDescription>Indicadores de janeiro de 2026</CardDescription>
+            <CardDescription>Indicadores consolidados do mês</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-3xl border border-slate-200 bg-[#F3E8FF] px-4 py-5 text-center">
+              <div className="rounded-3xl border border-slate-200 bg-white bg-opacity-100 px-4 py-5 text-center text-slate-900 shadow-xl">
                 <p className="text-xs uppercase text-slate-500">
                   Encontros Individuais
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">31</p>
+                <p className="mt-3 text-3xl font-semibold">31</p>
               </div>
-              <div className="rounded-3xl border border-slate-200 bg-[#F3E8FF] px-4 py-5 text-center">
+              <div className="rounded-3xl border border-slate-200 bg-white bg-opacity-100 px-4 py-5 text-center text-slate-900 shadow-xl">
                 <p className="text-xs uppercase text-slate-500">
                   Grupos Reflexivos
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">02</p>
+                <p className="mt-3 text-3xl font-semibold">02</p>
               </div>
-              <div className="rounded-3xl border border-slate-200 bg-[#F3E8FF] px-4 py-5 text-center">
+              <div className="rounded-3xl border border-slate-200 bg-white bg-opacity-100 px-4 py-5 text-center text-slate-900 shadow-xl">
                 <p className="text-xs uppercase text-slate-500">
                   Média de Participantes
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">18</p>
+                <p className="mt-3 text-3xl font-semibold">18</p>
               </div>
             </div>
           </CardContent>
@@ -442,13 +433,15 @@ export function SermulherView({ data }: SermulherViewProps) {
         </Card>
       </div>
 
-      <Image
-        src="/rodape.jpeg"
-        alt="Footer"
-        width={1000}
-        height={150}
-        className="mx-auto h-auto object-contain mt-12"
-      />
+      <div className="mt-12">
+        <Image
+          src="/rodape.jpeg"
+          alt="Footer"
+          width={1000}
+          height={150}
+          className="mx-auto h-auto object-contain mb-8"
+        />
+      </div>
     </div>
   );
 }

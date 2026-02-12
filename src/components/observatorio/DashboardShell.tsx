@@ -18,7 +18,7 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen w-full bg-transparent text-slate-100">
       <div className="relative overflow-hidden">
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-purple-500/30 blur-[140px]" />
         <div className="absolute left-0 top-40 h-80 w-80 rounded-full bg-fuchsia-400/20 blur-[160px]" />

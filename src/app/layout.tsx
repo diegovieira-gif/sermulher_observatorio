@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "SERMULHER Observatório",
   description:
     "Plataforma moderna para dados, redes de apoio e cuidado coletivo.",
+  icons: {
+    icon: [{ url: "/aju.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
