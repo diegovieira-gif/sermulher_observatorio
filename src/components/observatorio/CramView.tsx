@@ -319,7 +319,7 @@ export function CramView({ data }: CramViewProps) {
                 <BarChart
                   data={volumeServicos}
                   layout="vertical"
-                  margin={{ top: 5, right: 30, left: -30, bottom: 5 }}
+                  margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis type="number" stroke="#64748b" />
@@ -327,7 +327,9 @@ export function CramView({ data }: CramViewProps) {
                     type="category"
                     dataKey="name"
                     stroke="#64748b"
-                    width={110}
+                    width={140}
+                    tickMargin={6}
+                    tick={{ fontSize: 11 }}
                   />
                   <Tooltip content={makeAbsoluteTooltip(SERVICOS_TOTAL)} />
                   <Bar dataKey="value" radius={[10, 10, 10, 10]}>
@@ -411,7 +413,7 @@ export function CramView({ data }: CramViewProps) {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={encaminhamentosSocial}
-                  margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+                  margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
@@ -421,6 +423,8 @@ export function CramView({ data }: CramViewProps) {
                     textAnchor="end"
                     height={80}
                     interval={0}
+                    tickMargin={6}
+                    tick={{ fontSize: 11 }}
                   />
                   <YAxis
                     stroke="#64748b"
@@ -470,7 +474,7 @@ export function CramView({ data }: CramViewProps) {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={materiasJuridicas}
-                  margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+                  margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
@@ -480,6 +484,8 @@ export function CramView({ data }: CramViewProps) {
                     textAnchor="end"
                     height={80}
                     interval={0}
+                    tickMargin={6}
+                    tick={{ fontSize: 11 }}
                   />
                   <YAxis
                     stroke="#64748b"
