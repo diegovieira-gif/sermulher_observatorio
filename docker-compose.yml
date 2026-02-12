@@ -5,11 +5,20 @@ services:
     build: .
     container_name: sermulher_observatorio
     restart: always
+    # 1. Acesso via IP:porta
     ports:
       - "3003:3000"
     networks:
-      - portainer_default
+      - portainer_default # Necessária para o Traefik
       - sermulher_network
+    # 2. Acesso via Domínio (Traefik)
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sermulher-obs.rule=Host(`fluxo.sermulher.aracaju.se.gov.br`)"
+      - "traefik.http.routers.sermulher-obs.entrypoints=websecure"
+      - "traefik.http.routers.sermulher-obs.tls=true"
+      - "traefik.http.routers.sermulher-obs.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sermulher-obs.loadbalancer.server.port=3000"
 
 networks:
   portainer_default:
