@@ -11,14 +11,10 @@ export const DATA_JAN_2026 = {
         { label: "Buscas Ativas", value: 8 },
       ],
     },
-    consultasPsicologicas: {
-      agendadas: 94,
-      realizadas: 48,
-      faltas: 46,
-      realizadasPct: 51,
-      faltasPct: 49,
-      delta: "+1",
-    },
+    consultasPsicologicas: [
+      { name: "Realizadas", value: 48 },
+      { name: "Faltas/Remarcações", value: 46 },
+    ],
     demandasJuridicas: {
       delta: "+2",
       distribuicao: [
@@ -31,7 +27,7 @@ export const DATA_JAN_2026 = {
   },
   sermulher: {
     atendimentosNutricionais: {
-      delta: "+3",
+      delta: -44,
       series: [
         { month: "Nov", value: 13 },
         { month: "Dez", value: 9 },
@@ -44,7 +40,7 @@ export const DATA_JAN_2026 = {
       participantesMedios: 18,
     },
     ouvidoria: {
-      delta: "+1",
+      delta: 100,
       series: [
         { month: "Jan 2025", value: 31 },
         { month: "Jan 2026", value: 62 },
