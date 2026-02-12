@@ -1,6 +1,6 @@
-# Ser Mulher Observatorio
+# SERMULHER Observatório
 
-Landing page moderna e responsiva para apresentar o observatorio e suas
+Landing page moderna e responsiva para apresentar o observatório e suas
 iniciativas de cuidado coletivo.
 
 ## Rodar localmente
@@ -13,11 +13,11 @@ Abra o navegador em http://localhost:3000.
 
 ## Estrutura principal
 
-- Edite a pagina em `src/app/page.tsx`.
-- Estilos globais estao em `src/app/globals.css`.
+- Edite a página em `src/app/page.tsx`.
+- Estilos globais estão em `src/app/globals.css`.
 - Fontes usadas: Sora (texto) e Fraunces (destaques).
 
-## Build de producao
+## Build de produção
 
 ```bash
 npm run build

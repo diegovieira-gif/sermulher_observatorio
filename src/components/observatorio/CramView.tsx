@@ -205,8 +205,8 @@ export function CramView({ data }: CramViewProps) {
       <Image
         src="/cram.jpeg"
         alt="Logo CRAM"
-        width={220}
-        height={80}
+        width={110}
+        height={40}
         className="mx-auto mb-8"
         priority
       />
@@ -522,9 +522,9 @@ export function CramView({ data }: CramViewProps) {
 
       <Image
         src="/rodape.jpeg"
-        alt="Rodapé Sermulher"
-        width={1200}
-        height={180}
+        alt="Rodapé SERMULHER"
+        width={600}
+        height={90}
         className="w-full mt-12"
       />
     </section>

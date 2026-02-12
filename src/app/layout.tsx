@@ -13,7 +13,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Ser Mulher Observatório",
+  title: "SERMULHER Observatório",
   description:
     "Plataforma moderna para dados, redes de apoio e cuidado coletivo.",
 };
