@@ -84,11 +84,6 @@ type CramViewProps = {
   data?: CramData;
 };
 
-type TooltipProps = {
-  active?: boolean;
-  payload?: Array<{ payload: { name: string; value: number } }>;
-};
-
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
@@ -142,29 +137,37 @@ const asArray = <T,>(items: unknown, fallback: T[]): T[] =>
 const percentLabel = ({ value }: { value: number }) => `${value}%`;
 
 const makePercentTooltip = (baseTotal: number) =>
-  function PercentTooltip({ active, payload }: TooltipProps) {
+  function PercentTooltip({ active, payload }: any) {
     if (!active || !payload?.length) {
       return null;
     }
 
-    const { name, value } = payload[0].payload;
+    const { name, value } = payload[0].payload as {
+      name: string;
+      value: number;
+    };
+    const percentage = ((value / baseTotal) * 100).toFixed(1);
 
     return (
       <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-700 shadow-lg">
         <p className="font-semibold text-slate-900">{name}</p>
-        <p className="mt-1">Percentual: {value}%</p>
-        <p>Base: {baseTotal}</p>
+        <p className="mt-1 text-purple-600">
+          {value} ({percentage}%)
+        </p>
       </div>
     );
   };
 
 const makeAbsoluteTooltip = (baseTotal: number) =>
-  function AbsoluteTooltip({ active, payload }: TooltipProps) {
+  function AbsoluteTooltip({ active, payload }: any) {
     if (!active || !payload?.length) {
       return null;
     }
 
-    const { name, value } = payload[0].payload;
+    const { name, value } = payload[0].payload as {
+      name: string;
+      value: number;
+    };
     const percent = Math.round((value / baseTotal) * 100);
 
     return (
