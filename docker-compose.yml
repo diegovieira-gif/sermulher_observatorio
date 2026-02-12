@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  sermulher-observatorio:
+    build: .
+    container_name: sermulher_observatorio
+    restart: always
+    networks:
+      - portainer_default
+      - sermulher_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sermulher-obs.rule=Host(`dados.sermulher.aracaju.se.gov.br`)"
+      - "traefik.http.routers.sermulher-obs.entrypoints=websecure"
+      - "traefik.http.routers.sermulher-obs.tls=true"
+      - "traefik.http.routers.sermulher-obs.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sermulher-obs.loadbalancer.server.port=3000"
+
+networks:
+  portainer_default:
+    external: true
+  sermulher_network:
+    external: true
