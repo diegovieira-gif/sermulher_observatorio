@@ -28,7 +28,7 @@ export function DashboardShell({
           <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-purple-200">
-                Observatorio de Dados da Mulher
+                Observatório de Dados da Mulher
               </p>
               <h1 className="mt-3 font-display text-4xl text-white sm:text-5xl">
                 {title}

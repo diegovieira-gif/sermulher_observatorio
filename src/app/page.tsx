@@ -12,14 +12,14 @@ import {
 export default function Home() {
   return (
     <DashboardShell
-      title="Gestao Sermulher"
-      subtitle="Dashboard com indicadores consolidados da Secretaria SERMULHER e do CRAM."
+      title="Gestão SERMULHER"
+      subtitle="Dashboard com indicadores consolidados da SERMULHER e do CRAM."
       period={DATA_JAN_2026.period}
     >
       <Tabs defaultValue="sermulher" className="w-full">
         <TabsList className="bg-white/10">
-          <TabsTrigger value="sermulher">Secretaria SERMULHER</TabsTrigger>
-          <TabsTrigger value="cram">Unidade CRAM</TabsTrigger>
+          <TabsTrigger value="sermulher">SERMULHER</TabsTrigger>
+          <TabsTrigger value="cram">CRAM</TabsTrigger>
         </TabsList>
         <TabsContent value="sermulher">
           <SermulherView data={DATA_JAN_2026.sermulher} />

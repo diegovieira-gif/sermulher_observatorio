@@ -5,9 +5,9 @@ export const DATA_JAN_2026 = {
       total: 131,
       delta: "+4",
       breakdown: [
-        { label: "Psicologicos", value: 42 },
+        { label: "Psicológicos", value: 42 },
         { label: "Socioassistenciais", value: 42 },
-        { label: "Juridicos", value: 33 },
+        { label: "Jurídicos", value: 33 },
         { label: "Buscas Ativas", value: 8 },
       ],
     },
@@ -23,8 +23,8 @@ export const DATA_JAN_2026 = {
       delta: "+2",
       distribuicao: [
         { label: "Direito Penal", value: 36 },
-        { label: "Direito de Familia", value: 34 },
-        { label: "Orientacao Multidisciplinar", value: 18 },
+        { label: "Direito de Família", value: 34 },
+        { label: "Orientação Multidisciplinar", value: 18 },
         { label: "Direitos Fundamentais", value: 12 },
       ],
     },
