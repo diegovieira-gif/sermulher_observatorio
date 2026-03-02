@@ -14,7 +14,7 @@ services:
     # 2. Acesso via Domínio (Traefik)
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sermulher-obs.rule=Host(`fluxo.sermulher.aracaju.se.gov.br`)"
+      - "traefik.http.routers.sermulher-obs.rule=Host(`dados.sermulher.aracaju.se.gov.br`)"
       - "traefik.http.routers.sermulher-obs.entrypoints=websecure"
       - "traefik.http.routers.sermulher-obs.tls=true"
       - "traefik.http.routers.sermulher-obs.tls.certresolver=letsencrypt"
