@@ -29,7 +29,7 @@ export function PeriodFilter({
           <SelectValue placeholder="Selecione" />
         </SelectTrigger>
         <SelectContent>
-          {availablePeriods.map((period) => (
+          {availablePeriods?.map((period) => (
             <SelectItem key={period} value={period}>
               {period}
             </SelectItem>
