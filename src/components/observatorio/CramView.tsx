@@ -18,6 +18,7 @@ import {
 } from "recharts";
 
 import { cn } from "../../lib/utils";
+import { CramData } from "./data";
 
 const CRAM_PALETTE = [
   "#7c3aed",
@@ -28,60 +29,8 @@ const CRAM_PALETTE = [
   "#6366f1",
 ];
 
-const STATUS_TOTAL = 132;
-const SERVICOS_TOTAL = 131;
-const CONSULTAS_TOTAL = 94;
-const SOCIAL_TOTAL = 42;
-const JURIDICO_TOTAL = 33;
-
-type ChartItem = {
-  name: string;
-  value: number;
-};
-
-type CramData = {
-  statusAtendimento?: ChartItem[];
-  volumeServicos?: ChartItem[];
-  consultasPsicologicas?: ChartItem[];
-  encaminhamentosSocial?: ChartItem[];
-  materiasJuridicas?: ChartItem[];
-};
-
-export const CRAM_DATA_JAN: CramData = {
-  statusAtendimento: [
-    { name: "Atendidas", value: 67 },
-    { name: "Agendamento", value: 9 },
-    { name: "Busca Ativa", value: 8 },
-    { name: "Sem interesse", value: 8 },
-    { name: "Agendadas Fev", value: 5 },
-    { name: "Faltas", value: 3 },
-  ],
-  volumeServicos: [
-    { name: "Psicológicos", value: 48 },
-    { name: "Socioassistenciais", value: 42 },
-    { name: "Jurídicos", value: 33 },
-    { name: "Busca Ativa", value: 8 },
-  ],
-  consultasPsicologicas: [
-    { name: "Realizadas", value: 48 },
-    { name: "Faltas/Remarcações", value: 46 },
-  ],
-  encaminhamentosSocial: [
-    { name: "Acolhimento Psicológico", value: 45 },
-    { name: "Benefícios Sociais", value: 35 },
-    { name: "Orientação Jurídica", value: 10 },
-    { name: "Psicológico e Jurídico", value: 10 },
-  ],
-  materiasJuridicas: [
-    { name: "Penal", value: 36 },
-    { name: "Família", value: 34 },
-    { name: "Multidisciplinar", value: 18 },
-    { name: "Fundamentais", value: 12 },
-  ],
-};
-
 type CramViewProps = {
-  data?: CramData;
+  data: CramData;
 };
 
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -131,10 +80,7 @@ function CardContent({
   return <div className={cn("p-6 pt-4", className)} {...props} />;
 }
 
-const asArray = <T,>(items: unknown, fallback: T[]): T[] =>
-  Array.isArray(items) ? items : fallback;
-
-const percentLabel = ({ value }: { value: number }) => `${value}%`;
+const percentLabel = ({ percent }: { percent: number }) => `${(percent * 100).toFixed(1)}%`;
 
 const makePercentTooltip = (baseTotal: number) =>
   function PercentTooltip({ active, payload }: any) {
@@ -142,17 +88,15 @@ const makePercentTooltip = (baseTotal: number) =>
       return null;
     }
 
-    const { name, value } = payload[0].payload as {
-      name: string;
-      value: number;
-    };
-    const percentage = ((value / baseTotal) * 100).toFixed(1);
+    const { label, name, value, percent } = payload[0].payload;
+    const displayName = label || name;
+    const percentage = percent ? (percent * 100).toFixed(1) : ((value / baseTotal) * 100).toFixed(1);
 
     return (
       <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-700 shadow-lg">
-        <p className="font-semibold text-slate-900">{name}</p>
+        <p className="font-semibold text-slate-900">{displayName}</p>
         <p className="mt-1 text-purple-600">
-          {value} ({percentage}%)
+          {value.toFixed ? value.toFixed(1) : value} ({percentage}%)
         </p>
       </div>
     );
@@ -180,28 +124,14 @@ const makeAbsoluteTooltip = (baseTotal: number) =>
   };
 
 export function CramView({ data }: CramViewProps) {
-  const resolved = data ?? CRAM_DATA_JAN;
+  const vG = data.visaoGeral;
 
-  const statusAtendimento = asArray(
-    resolved.statusAtendimento,
-    CRAM_DATA_JAN.statusAtendimento ?? [],
-  );
-  const volumeServicos = asArray(
-    resolved.volumeServicos,
-    CRAM_DATA_JAN.volumeServicos ?? [],
-  );
-  const consultasPsicologicas = asArray(
-    resolved.consultasPsicologicas,
-    CRAM_DATA_JAN.consultasPsicologicas ?? [],
-  );
-  const encaminhamentosSocial = asArray(
-    resolved.encaminhamentosSocial,
-    CRAM_DATA_JAN.encaminhamentosSocial ?? [],
-  );
-  const materiasJuridicas = asArray(
-    resolved.materiasJuridicas,
-    CRAM_DATA_JAN.materiasJuridicas ?? [],
-  );
+  const volumeServicosData = [
+    { name: "Psicológicos", value: data.atendimentosPsicologicos.reduce((acc, curr) => acc + (curr.name.includes("realizados") || curr.name.includes("Realizadas") ? curr.value : 0), 0) },
+    { name: "Socioassistenciais", value: data.acolhimentosSociais },
+    { name: "Jurídicos", value: data.orientacoesJuridicas.total },
+    { name: "Atend. Grupo", value: vG.atendimentosGrupo },
+  ];
 
   return (
     <section className="grid gap-6">
@@ -216,44 +146,49 @@ export function CramView({ data }: CramViewProps) {
 
       <Card className="w-full bg-white">
         <CardHeader>
-          <CardTitle>Resumo de Janeiro/2026</CardTitle>
+          <CardTitle>Resumo de {data.periodo}</CardTitle>
           <CardDescription>
             Dados consolidados da Secretaria da Mulher com foco em atendimento e
             encaminhamentos.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-4">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
-                Mulheres encaminhadas
+              <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
+                Mulheres Encaminhadas
               </p>
               <p className="mt-3 text-3xl font-semibold text-slate-900">
-                {STATUS_TOTAL}
+                {vG.mulheresEncaminhadas}
               </p>
-              <p className="mt-2 text-xs text-slate-500">Status geral do mês</p>
+              <p className="mt-2 text-xs text-slate-500">Demanda espontânea e direta</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
-                Atendimentos realizados
+              <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
+                Mulheres Atendidas
               </p>
               <p className="mt-3 text-3xl font-semibold text-slate-900">
-                {SERVICOS_TOTAL}
+                {vG.mulheresAtendidas}
               </p>
-              <p className="mt-2 text-xs text-slate-500">
-                Volume total de serviços
-              </p>
+              <p className="mt-2 text-xs text-slate-500">{vG.novosCasos} novos casos</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
-                Consultas agendadas
+              <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
+                Serviços Realizados
               </p>
               <p className="mt-3 text-3xl font-semibold text-slate-900">
-                {CONSULTAS_TOTAL}
+                {vG.servicosRealizados}
               </p>
-              <p className="mt-2 text-xs text-slate-500">
-                48 realizadas e 46 faltas
+              <p className="mt-2 text-xs text-slate-500">Volume total do mês</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
+                Rodas Terapêuticas
               </p>
+              <p className="mt-3 text-3xl font-semibold text-slate-900">
+                {vG.rodasTerapeuticas}
+              </p>
+              <p className="mt-2 text-xs text-slate-500">{vG.atendimentosGrupo} atend. em grupo</p>
             </div>
           </div>
         </CardContent>
@@ -262,43 +197,33 @@ export function CramView({ data }: CramViewProps) {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card className="bg-white">
           <CardHeader>
-            <CardTitle>Status de atendimento</CardTitle>
+            <CardTitle>Consultas Psicológicas</CardTitle>
             <CardDescription>
-              Distribuição percentual das 132 mulheres encaminhadas.
+              Comparativo entre atendimentos realizados e faltas.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div
-              className="h-[350px]"
-              role="img"
-              aria-label="Gráfico de pizza com o status de atendimento"
-            >
+            <div className="h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
                   <Pie
-                    data={statusAtendimento}
+                    data={data.atendimentosPsicologicos}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={50}
+                    innerRadius={60}
                     outerRadius={100}
-                    paddingAngle={4}
-                    label={percentLabel}
+                    paddingAngle={5}
+                    label={({ value }) => `${value}`}
                   >
-                    {statusAtendimento.map((entry, index) => (
+                    {data.atendimentosPsicologicos.map((entry, index) => (
                       <Cell
                         key={entry.name}
-                        fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
+                        fill={CRAM_PALETTE[(index + 1) % CRAM_PALETTE.length]}
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={makePercentTooltip(STATUS_TOTAL)} />
-                  <Legend
-                    verticalAlign="bottom"
-                    iconType="circle"
-                    formatter={(value) => (
-                      <span className="text-xs text-slate-600">{value}</span>
-                    )}
-                  />
+                  <Tooltip content={makeAbsoluteTooltip(data.atendimentosPsicologicos.reduce((a, b) => a + b.value, 0))} />
+                  <Legend verticalAlign="bottom" align="center" />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -307,212 +232,75 @@ export function CramView({ data }: CramViewProps) {
 
         <Card className="bg-white">
           <CardHeader>
-            <CardTitle>Volume de atendimentos</CardTitle>
+            <CardTitle>Orientações Jurídicas</CardTitle>
             <CardDescription>
-              Distribuição dos 131 atendimentos realizados no mês.
+              Distribuição por área do Direito (Total: {data.orientacoesJuridicas.total}).
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div
-              className="h-[350px]"
-              role="img"
-              aria-label="Gráfico de barras horizontais com o volume de atendimentos"
-            >
+            <div className="h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  data={volumeServicos}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+                  data={data.orientacoesJuridicas.distribuicao}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis type="number" stroke="#64748b" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis 
+                    dataKey="label" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    interval={0} 
+                    tick={{ fontSize: 11, fill: '#64748b' }} 
+                  />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748b' }} tickFormatter={(v) => `${v}%`} />
+                  <Tooltip content={makePercentTooltip(100)} />
+                  <Bar dataKey="value" radius={[10, 10, 0, 0]}>
+                    <LabelList dataKey="value" position="top" formatter={(v: number) => `${v}%`} fill="#475569" fontSize={11} />
+                    {data.orientacoesJuridicas.distribuicao.map((entry, index) => (
+                      <Cell
+                        key={entry.label}
+                        fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white md:col-span-2">
+          <CardHeader>
+            <CardTitle>Volume de Atendimentos por Área</CardTitle>
+            <CardDescription>
+              Resumo quantitativo dos acolhimentos e orientações.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={volumeServicosData}
+                  layout="vertical"
+                  margin={{ top: 5, right: 80, left: 10, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                  <XAxis type="number" hide />
                   <YAxis
                     type="category"
                     dataKey="name"
-                    stroke="#64748b"
-                    width={140}
-                    tickMargin={6}
-                    tick={{ fontSize: 11 }}
+                    width={150}
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: "#475569", fontSize: 13, fontWeight: 500 }}
                   />
-                  <Tooltip content={makeAbsoluteTooltip(SERVICOS_TOTAL)} />
-                  <Bar dataKey="value" radius={[10, 10, 10, 10]}>
-                    <LabelList
-                      dataKey="value"
-                      position="right"
-                      fill="#0f172a"
-                      fontSize={12}
-                    />
-                    {volumeServicos.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white">
-          <CardHeader>
-            <CardTitle>Consultas psicológicas</CardTitle>
-            <CardDescription>
-              Realizadas versus faltas/remarcações nas 94 consultas agendadas.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div
-              className="h-[350px]"
-              role="img"
-              aria-label="Gráfico de pizza com consultas psicológicas realizadas e faltas"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
-                  <Pie
-                    data={consultasPsicologicas}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={50}
-                    outerRadius={100}
-                    paddingAngle={4}
-                    label={({ value }) => `${value}`}
-                  >
-                    {consultasPsicologicas.map((entry, index) => (
+                  <Tooltip />
+                  <Bar dataKey="value" barSize={35} radius={[0, 20, 20, 0]}>
+                    <LabelList dataKey="value" position="right" fill="#0f172a" fontSize={14} fontWeight={600} offset={10} />
+                    {volumeServicosData.map((entry, index) => (
                       <Cell
                         key={entry.name}
                         fill={CRAM_PALETTE[(index + 2) % CRAM_PALETTE.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip content={makeAbsoluteTooltip(CONSULTAS_TOTAL)} />
-                  <Legend
-                    verticalAlign="bottom"
-                    iconType="circle"
-                    formatter={(value) => (
-                      <span className="text-xs text-slate-600">{value}</span>
-                    )}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white">
-          <CardHeader>
-            <CardTitle>Encaminhamentos socioassistenciais</CardTitle>
-            <CardDescription>
-              Percentual dos 42 acolhimentos sociais realizados.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div
-              className="h-[350px]"
-              role="img"
-              aria-label="Gráfico de barras verticais com encaminhamentos sociais"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={encaminhamentosSocial}
-                  margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="#64748b"
-                    angle={-20}
-                    textAnchor="end"
-                    height={80}
-                    interval={0}
-                    tickMargin={6}
-                    tick={{ fontSize: 11 }}
-                  />
-                  <YAxis
-                    stroke="#64748b"
-                    domain={[0, 50]}
-                    label={{
-                      value: "Percentual",
-                      angle: -90,
-                      position: "insideLeft",
-                      fill: "#64748b",
-                    }}
-                  />
-                  <Tooltip content={makePercentTooltip(SOCIAL_TOTAL)} />
-                  <Bar dataKey="value" radius={[12, 12, 0, 0]}>
-                    <LabelList
-                      dataKey="value"
-                      position="top"
-                      fill="#0f172a"
-                      fontSize={12}
-                      formatter={(value: number) => `${value}%`}
-                    />
-                    {encaminhamentosSocial.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white">
-          <CardHeader>
-            <CardTitle>Matérias jurídicas</CardTitle>
-            <CardDescription>
-              Percentual das 33 orientações jurídicas registradas.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div
-              className="h-[350px]"
-              role="img"
-              aria-label="Gráfico de barras verticais com matérias jurídicas"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={materiasJuridicas}
-                  margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="#64748b"
-                    angle={-20}
-                    textAnchor="end"
-                    height={80}
-                    interval={0}
-                    tickMargin={6}
-                    tick={{ fontSize: 11 }}
-                  />
-                  <YAxis
-                    stroke="#64748b"
-                    domain={[0, 40]}
-                    label={{
-                      value: "Percentual",
-                      angle: -90,
-                      position: "insideLeft",
-                      fill: "#64748b",
-                    }}
-                  />
-                  <Tooltip content={makePercentTooltip(JURIDICO_TOTAL)} />
-                  <Bar dataKey="value" radius={[12, 12, 0, 0]}>
-                    <LabelList
-                      dataKey="value"
-                      position="top"
-                      fill="#0f172a"
-                      fontSize={12}
-                      formatter={(value: number) => `${value}%`}
-                    />
-                    {materiasJuridicas.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
                       />
                     ))}
                   </Bar>
@@ -526,9 +314,9 @@ export function CramView({ data }: CramViewProps) {
       <Image
         src="/rodape.jpeg"
         alt="Rodapé SERMULHER"
-        width={600}
-        height={90}
-        className="w-full mt-12"
+        width={1000}
+        height={150}
+        className="w-full mt-12 rounded-3xl opacity-90"
       />
     </section>
   );
