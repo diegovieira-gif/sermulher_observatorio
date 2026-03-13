@@ -12,6 +12,8 @@ export interface CramData {
     servicosRealizados: number;
     rodasTerapeuticas: number;
     atendimentosGrupo: number;
+    buscaAtiva: number;
+    atendimentosRecepcao: number;
   };
   atendimentosPsicologicos: ChartItem[];
   acolhimentosSociais: number;
@@ -59,12 +61,14 @@ export const DATA_JAN_2026: DashboardData = {
   cram: {
     periodo: "Janeiro 2026",
     visaoGeral: {
-      mulheresEncaminhadas: 132,
-      mulheresAtendidas: 67,
-      novosCasos: 28,
-      servicosRealizados: 131,
-      rodasTerapeuticas: 4,
-      atendimentosGrupo: 31,
+      mulheresEncaminhadas: 131,
+      mulheresAtendidas: 122,
+      novosCasos: 54,
+      servicosRealizados: 184,
+      rodasTerapeuticas: 2,
+      atendimentosGrupo: 14,
+      buscaAtiva: 8,
+      atendimentosRecepcao: 53,
     },
     atendimentosPsicologicos: [
       { name: "Realizadas", value: 48 },
@@ -83,35 +87,35 @@ export const DATA_JAN_2026: DashboardData = {
   },
   sermulher: {
     ouvidoria: {
-      totalHistorico: 93,
+      totalHistorico: 61,
       series: [
         { month: "Jan 2025", value: 31 },
-        { month: "Jan 2026", value: 62 },
+        { month: "Jan 2026", value: 30 },
       ],
     },
     salaAzul: {
       encontrosIndividuais: 31,
-      gruposReflexivos: 2,
+      gruposReflexivos: 1,
       participantesMedios: 18,
     },
     servicos: {
-      sociais: 28,
-      psicologicos: 64,
-      juridicos: 8,
+      sociais: 16,
+      psicologicos: 29,
+      juridicos: 6,
       distribuicao: [
-        { name: "Atendimentos Psicológicos", value: 64 },
-        { name: "Atendimentos Sociais", value: 28 },
-        { name: "Rodas Terapêuticas", value: 8 },
+        { name: "Atendimentos Psicológicos", value: 56.9 },
+        { name: "Atendimentos Sociais", value: 31.4 },
+        { name: "Atendimentos Jurídicos", value: 11.7 },
       ],
     },
     acoes: {
-      conscientizacao: 26,
+      conscientizacao: 1,
       escutas: 0,
-      campanhas: 0,
+      campanhas: 1,
     },
     capacitacoes: {
       cursoCuidador: 0,
-      feiraExpositoras: 1,
+      feiraExpositoras: 0,
     },
   },
 };
@@ -124,9 +128,11 @@ export const DATA_FEV_2026: DashboardData = {
       mulheresEncaminhadas: 170,
       mulheresAtendidas: 84,
       novosCasos: 35,
-      servicosRealizados: 339,
+      servicosRealizados: 340,
       rodasTerapeuticas: 6,
       atendimentosGrupo: 52,
+      buscaAtiva: 31,
+      atendimentosRecepcao: 195,
     },
     atendimentosPsicologicos: [
       { name: "Atendimentos realizados", value: 54 },
@@ -145,36 +151,93 @@ export const DATA_FEV_2026: DashboardData = {
   },
   sermulher: {
     ouvidoria: {
-      totalHistorico: 129,
+      totalHistorico: 100,
       series: [
         { month: "2025", value: 32 },
-        { month: "JAN 2026", value: 62 },
-        { month: "FEV 2026", value: 36 },
+        { month: "JAN 2026", value: 30 },
+        { month: "FEV 2026", value: 38 },
       ],
     },
     salaAzul: {
-      encontrosIndividuais: 84,
-      gruposReflexivos: 3,
-      participantesMedios: 18,
+      encontrosIndividuais: 32,
+      gruposReflexivos: 2,
+      participantesMedios: 25,
     },
     servicos: {
-      sociais: 68,
-      psicologicos: 46,
-      juridicos: 31,
+      sociais: 8,
+      psicologicos: 18,
+      juridicos: 4,
       distribuicao: [
-        { name: "Atendimentos Psicológicos", value: 62.3 },
-        { name: "Atendimentos Sociais", value: 24.6 },
-        { name: "Rodas Terapêuticas", value: 13.2 },
+        { name: "Atendimentos Psicológicos", value: 60.0 },
+        { name: "Atendimentos Sociais", value: 26.7 },
+        { name: "Atendimentos Jurídicos", value: 13.3 },
       ],
     },
     acoes: {
-      conscientizacao: 31,
-      escutas: 9,
-      campanhas: 7,
+      conscientizacao: 9,
+      escutas: 0,
+      campanhas: 1,
     },
     capacitacoes: {
       cursoCuidador: 13,
-      feiraExpositoras: 10,
+      feiraExpositoras: 0,
+    },
+  },
+};
+
+export const DATA_MAR_2026: DashboardData = {
+  period: "Março 2026",
+  cram: {
+    periodo: "Março 2026",
+    visaoGeral: {
+      mulheresEncaminhadas: 0,
+      mulheresAtendidas: 0,
+      novosCasos: 0,
+      servicosRealizados: 0,
+      rodasTerapeuticas: 0,
+      atendimentosGrupo: 0,
+      buscaAtiva: 0,
+      atendimentosRecepcao: 0,
+    },
+    atendimentosPsicologicos: [
+      { name: "Realizadas", value: 0 },
+      { name: "Faltas/Remarcações", value: 0 },
+    ],
+    acolhimentosSociais: 0,
+    orientacoesJuridicas: {
+      total: 0,
+      distribuicao: [],
+    },
+  },
+  sermulher: {
+    ouvidoria: {
+      totalHistorico: 100,
+      series: [
+        { month: "2025", value: 32 },
+        { month: "JAN 2026", value: 30 },
+        { month: "FEV 2026", value: 38 },
+        { month: "MAR 2026", value: 0 },
+      ],
+    },
+    salaAzul: {
+      encontrosIndividuais: 0,
+      gruposReflexivos: 0,
+      participantesMedios: 0,
+    },
+    servicos: {
+      sociais: 0,
+      psicologicos: 0,
+      juridicos: 0,
+      distribuicao: [],
+    },
+    acoes: {
+      conscientizacao: 0,
+      escutas: 0,
+      campanhas: 0,
+    },
+    capacitacoes: {
+      cursoCuidador: 0,
+      feiraExpositoras: 1, // Centro Vivo aconteceu em 08/03
     },
   },
 };
@@ -185,6 +248,7 @@ export const SERMU_COLORS = ["#f0abfc", "#d946ef", "#a855f7", "#7e22ce"];
 export const HISTORICO_DADOS = {
   "Janeiro 2026": DATA_JAN_2026,
   "Fevereiro 2026": DATA_FEV_2026,
+  "Março 2026": DATA_MAR_2026,
 };
 
 export type PeriodKey = keyof typeof HISTORICO_DADOS;

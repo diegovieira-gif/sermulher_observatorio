@@ -153,7 +153,7 @@ export function CramView({ data }: CramViewProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
                 Mulheres Encaminhadas
@@ -189,6 +189,24 @@ export function CramView({ data }: CramViewProps) {
                 {vG.rodasTerapeuticas}
               </p>
               <p className="mt-2 text-xs text-slate-500">{vG.atendimentosGrupo} atend. em grupo</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
+                Busca Ativa
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-slate-900">
+                {vG.buscaAtiva}
+              </p>
+              <p className="mt-2 text-xs text-slate-500">Ações de campo/contato</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
+                Atend. Recepção
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-slate-900">
+                {vG.atendimentosRecepcao}
+              </p>
+              <p className="mt-2 text-xs text-slate-500">Acolhimento inicial</p>
             </div>
           </div>
         </CardContent>
