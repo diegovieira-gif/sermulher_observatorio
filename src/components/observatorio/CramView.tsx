@@ -131,6 +131,8 @@ export function CramView({ data }: CramViewProps) {
     { name: "Socioassistenciais", value: data.acolhimentosSociais },
     { name: "Jurídicos", value: data.orientacoesJuridicas.total },
     { name: "Atend. Grupo", value: vG.atendimentosGrupo },
+    { name: "Busca Ativa", value: vG.buscaAtiva },
+    { name: "Recepção", value: vG.atendimentosRecepcao },
   ];
 
   return (
