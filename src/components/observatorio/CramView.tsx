@@ -16,6 +16,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import type { TooltipProps } from "recharts";
+import type {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 
 import { cn } from "../../lib/utils";
 import { CramData } from "./data";
@@ -80,44 +85,81 @@ function CardContent({
   return <div className={cn("p-6 pt-4", className)} {...props} />;
 }
 
-const percentLabel = ({ percent }: { percent: number }) => `${(percent * 100).toFixed(1)}%`;
+type TooltipDataPoint = {
+  label?: string;
+  name?: string;
+  value?: number | string;
+  percent?: number;
+};
+
+const getTooltipDataPoint = (
+  payload: TooltipProps<ValueType, NameType>["payload"],
+): TooltipDataPoint | null => {
+  if (!payload?.length) {
+    return null;
+  }
+
+  const rawPayload = payload[0]?.payload;
+  if (!rawPayload || typeof rawPayload !== "object") {
+    return null;
+  }
+
+  return rawPayload as TooltipDataPoint;
+};
 
 const makePercentTooltip = (baseTotal: number) =>
-  function PercentTooltip({ active, payload }: any) {
+  function PercentTooltip({
+    active,
+    payload,
+  }: TooltipProps<ValueType, NameType>) {
     if (!active || !payload?.length) {
       return null;
     }
 
-    const { label, name, value, percent } = payload[0].payload;
+    const dataPoint = getTooltipDataPoint(payload);
+    if (!dataPoint) {
+      return null;
+    }
+
+    const { label, name, value, percent } = dataPoint;
     const displayName = label || name;
-    const percentage = percent ? (percent * 100).toFixed(1) : ((value / baseTotal) * 100).toFixed(1);
+    const numericValue = Number(value ?? 0);
+    const percentage = percent
+      ? (percent * 100).toFixed(1)
+      : ((numericValue / baseTotal) * 100).toFixed(1);
 
     return (
       <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-700 shadow-lg">
         <p className="font-semibold text-slate-900">{displayName}</p>
         <p className="mt-1 text-purple-600">
-          {value.toFixed ? value.toFixed(1) : value} ({percentage}%)
+          {numericValue.toFixed(1)} ({percentage}%)
         </p>
       </div>
     );
   };
 
 const makeAbsoluteTooltip = (baseTotal: number) =>
-  function AbsoluteTooltip({ active, payload }: any) {
+  function AbsoluteTooltip({
+    active,
+    payload,
+  }: TooltipProps<ValueType, NameType>) {
     if (!active || !payload?.length) {
       return null;
     }
 
-    const { name, value } = payload[0].payload as {
-      name: string;
-      value: number;
-    };
-    const percent = Math.round((value / baseTotal) * 100);
+    const dataPoint = getTooltipDataPoint(payload);
+    if (!dataPoint) {
+      return null;
+    }
+
+    const { name, value } = dataPoint;
+    const numericValue = Number(value ?? 0);
+    const percent = Math.round((numericValue / baseTotal) * 100);
 
     return (
       <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-700 shadow-lg">
         <p className="font-semibold text-slate-900">{name}</p>
-        <p className="mt-1">Valor: {value}</p>
+        <p className="mt-1">Valor: {numericValue}</p>
         <p>Percentual: {percent}%</p>
       </div>
     );
@@ -127,7 +169,17 @@ export function CramView({ data }: CramViewProps) {
   const vG = data.visaoGeral;
 
   const volumeServicosData = [
-    { name: "Psicológicos", value: data.atendimentosPsicologicos.reduce((acc, curr) => acc + (curr.name.includes("realizados") || curr.name.includes("Realizadas") ? curr.value : 0), 0) },
+    {
+      name: "Psicológicos",
+      value: data.atendimentosPsicologicos.reduce(
+        (acc, curr) =>
+          acc +
+          (curr.name.includes("realizados") || curr.name.includes("Realizadas")
+            ? curr.value
+            : 0),
+        0,
+      ),
+    },
     { name: "Socioassistenciais", value: data.acolhimentosSociais },
     { name: "Jurídicos", value: data.orientacoesJuridicas.total },
     { name: "Atend. Grupo", value: vG.atendimentosGrupo },
@@ -163,7 +215,9 @@ export function CramView({ data }: CramViewProps) {
               <p className="mt-3 text-3xl font-semibold text-slate-900">
                 {vG.mulheresEncaminhadas}
               </p>
-              <p className="mt-2 text-xs text-slate-500">Demanda espontânea e direta</p>
+              <p className="mt-2 text-xs text-slate-500">
+                Demanda espontânea e direta
+              </p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
@@ -172,7 +226,9 @@ export function CramView({ data }: CramViewProps) {
               <p className="mt-3 text-3xl font-semibold text-slate-900">
                 {vG.mulheresAtendidas}
               </p>
-              <p className="mt-2 text-xs text-slate-500">{vG.novosCasos} novos casos</p>
+              <p className="mt-2 text-xs text-slate-500">
+                {vG.novosCasos} novos casos
+              </p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
@@ -190,7 +246,9 @@ export function CramView({ data }: CramViewProps) {
               <p className="mt-3 text-3xl font-semibold text-slate-900">
                 {vG.rodasTerapeuticas}
               </p>
-              <p className="mt-2 text-xs text-slate-500">{vG.atendimentosGrupo} atend. em grupo</p>
+              <p className="mt-2 text-xs text-slate-500">
+                {vG.atendimentosGrupo} atend. em grupo
+              </p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
@@ -199,7 +257,9 @@ export function CramView({ data }: CramViewProps) {
               <p className="mt-3 text-3xl font-semibold text-slate-900">
                 {vG.buscaAtiva}
               </p>
-              <p className="mt-2 text-xs text-slate-500">Ações de campo/contato</p>
+              <p className="mt-2 text-xs text-slate-500">
+                Ações de campo/contato
+              </p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-tight text-slate-500 font-bold">
@@ -242,7 +302,14 @@ export function CramView({ data }: CramViewProps) {
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={makeAbsoluteTooltip(data.atendimentosPsicologicos.reduce((a, b) => a + b.value, 0))} />
+                  <Tooltip
+                    content={makeAbsoluteTooltip(
+                      data.atendimentosPsicologicos.reduce(
+                        (a, b) => a + b.value,
+                        0,
+                      ),
+                    )}
+                  />
                   <Legend verticalAlign="bottom" align="center" />
                 </PieChart>
               </ResponsiveContainer>
@@ -254,7 +321,8 @@ export function CramView({ data }: CramViewProps) {
           <CardHeader>
             <CardTitle>Orientações Jurídicas</CardTitle>
             <CardDescription>
-              Distribuição por área do Direito (Total: {data.orientacoesJuridicas.total}).
+              Distribuição por área do Direito (Total:{" "}
+              {data.orientacoesJuridicas.total}).
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -264,24 +332,39 @@ export function CramView({ data }: CramViewProps) {
                   data={data.orientacoesJuridicas.distribuicao}
                   margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis 
-                    dataKey="label" 
-                    angle={-45} 
-                    textAnchor="end" 
-                    interval={0} 
-                    tick={{ fontSize: 11, fill: '#64748b' }} 
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#f1f5f9"
                   />
-                  <YAxis tick={{ fontSize: 11, fill: '#64748b' }} tickFormatter={(v) => `${v}%`} />
+                  <XAxis
+                    dataKey="label"
+                    angle={-45}
+                    textAnchor="end"
+                    interval={0}
+                    tick={{ fontSize: 11, fill: "#64748b" }}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: "#64748b" }}
+                    tickFormatter={(v) => `${v}%`}
+                  />
                   <Tooltip content={makePercentTooltip(100)} />
                   <Bar dataKey="value" radius={[10, 10, 0, 0]}>
-                    <LabelList dataKey="value" position="top" formatter={(v: number) => `${v}%`} fill="#475569" fontSize={11} />
-                    {data.orientacoesJuridicas.distribuicao.map((entry, index) => (
-                      <Cell
-                        key={entry.label}
-                        fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
-                      />
-                    ))}
+                    <LabelList
+                      dataKey="value"
+                      position="top"
+                      formatter={(v: number) => `${v}%`}
+                      fill="#475569"
+                      fontSize={11}
+                    />
+                    {data.orientacoesJuridicas.distribuicao.map(
+                      (entry, index) => (
+                        <Cell
+                          key={entry.label}
+                          fill={CRAM_PALETTE[index % CRAM_PALETTE.length]}
+                        />
+                      ),
+                    )}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -304,7 +387,11 @@ export function CramView({ data }: CramViewProps) {
                   layout="vertical"
                   margin={{ top: 5, right: 80, left: 10, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    horizontal={false}
+                    stroke="#f1f5f9"
+                  />
                   <XAxis type="number" hide />
                   <YAxis
                     type="category"
@@ -316,7 +403,14 @@ export function CramView({ data }: CramViewProps) {
                   />
                   <Tooltip />
                   <Bar dataKey="value" barSize={35} radius={[0, 20, 20, 0]}>
-                    <LabelList dataKey="value" position="right" fill="#0f172a" fontSize={14} fontWeight={600} offset={10} />
+                    <LabelList
+                      dataKey="value"
+                      position="right"
+                      fill="#0f172a"
+                      fontSize={14}
+                      fontWeight={600}
+                      offset={10}
+                    />
                     {volumeServicosData.map((entry, index) => (
                       <Cell
                         key={entry.name}

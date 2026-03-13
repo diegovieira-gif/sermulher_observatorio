@@ -47,6 +47,7 @@ export interface SermulherData {
   capacitacoes: {
     cursoCuidador: number;
     feiraExpositoras: number;
+    centroVivoData: string | null;
   };
 }
 
@@ -116,6 +117,7 @@ export const DATA_JAN_2026: DashboardData = {
     capacitacoes: {
       cursoCuidador: 0,
       feiraExpositoras: 0,
+      centroVivoData: null,
     },
   },
 };
@@ -181,6 +183,7 @@ export const DATA_FEV_2026: DashboardData = {
     capacitacoes: {
       cursoCuidador: 13,
       feiraExpositoras: 0,
+      centroVivoData: null,
     },
   },
 };
@@ -237,7 +240,8 @@ export const DATA_MAR_2026: DashboardData = {
     },
     capacitacoes: {
       cursoCuidador: 0,
-      feiraExpositoras: 1, // Centro Vivo aconteceu em 08/03
+      feiraExpositoras: 1,
+      centroVivoData: "08/03",
     },
   },
 };

@@ -80,8 +80,6 @@ export function SermulherView({ data }: SermulherViewProps) {
     value: item.value,
   }));
 
-  const salaAzulChartData = data.servicos.distribuicao;
-
   return (
     <div className="w-full space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <div className="grid gap-8 lg:grid-cols-2">
@@ -90,7 +88,9 @@ export function SermulherView({ data }: SermulherViewProps) {
             <CardTitle className="text-xl font-bold text-purple-900">
               Ouvidoria da Mulher
             </CardTitle>
-            <CardDescription>Comparativo de atendimentos (Histórico)</CardDescription>
+            <CardDescription>
+              Comparativo de atendimentos (Histórico)
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-56">
@@ -101,7 +101,7 @@ export function SermulherView({ data }: SermulherViewProps) {
                   margin={{ left: 0, right: 24, top: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" domain={[0, 'auto']} tickLine={false} />
+                  <XAxis type="number" domain={[0, "auto"]} tickLine={false} />
                   <YAxis
                     type="category"
                     dataKey="label"
@@ -143,7 +143,9 @@ export function SermulherView({ data }: SermulherViewProps) {
             <p className="text-7xl font-bold text-purple-600">
               {data.ouvidoria.totalHistorico}
             </p>
-            <p className="mt-4 text-slate-500 uppercase tracking-widest text-xs">Registros</p>
+            <p className="mt-4 text-slate-500 uppercase tracking-widest text-xs">
+              Registros
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -153,7 +155,9 @@ export function SermulherView({ data }: SermulherViewProps) {
           <CardTitle className="text-xl font-bold text-slate-900">
             Sala Azul
           </CardTitle>
-          <CardDescription>Distribuição dos atendimentos e encontros</CardDescription>
+          <CardDescription>
+            Distribuição dos atendimentos e encontros
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 lg:grid-cols-[300px_1fr] lg:items-center">
@@ -187,16 +191,28 @@ export function SermulherView({ data }: SermulherViewProps) {
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center">
-                <p className="text-xs uppercase text-slate-500 font-medium">Encontros Individuais</p>
-                <p className="mt-2 text-4xl font-bold text-purple-600">{data.salaAzul.encontrosIndividuais}</p>
+                <p className="text-xs uppercase text-slate-500 font-medium">
+                  Encontros Individuais
+                </p>
+                <p className="mt-2 text-4xl font-bold text-purple-600">
+                  {data.salaAzul.encontrosIndividuais}
+                </p>
               </div>
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center">
-                <p className="text-xs uppercase text-slate-500 font-medium">Grupos Reflexivos</p>
-                <p className="mt-2 text-4xl font-bold text-purple-600">{data.salaAzul.gruposReflexivos}</p>
+                <p className="text-xs uppercase text-slate-500 font-medium">
+                  Grupos Reflexivos
+                </p>
+                <p className="mt-2 text-4xl font-bold text-purple-600">
+                  {data.salaAzul.gruposReflexivos}
+                </p>
               </div>
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center">
-                <p className="text-xs uppercase text-slate-500 font-medium">Participantes Médios</p>
-                <p className="mt-2 text-4xl font-bold text-purple-600">{data.salaAzul.participantesMedios}</p>
+                <p className="text-xs uppercase text-slate-500 font-medium">
+                  Participantes Médios
+                </p>
+                <p className="mt-2 text-4xl font-bold text-purple-600">
+                  {data.salaAzul.participantesMedios}
+                </p>
               </div>
             </div>
           </div>
@@ -209,7 +225,14 @@ export function SermulherView({ data }: SermulherViewProps) {
           <CardHeader>
             <div className="flex items-center gap-3">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-purple-100 text-purple-600">
-                 <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -220,20 +243,28 @@ export function SermulherView({ data }: SermulherViewProps) {
                 Ações de Impacto
               </CardTitle>
             </div>
-            <CardDescription>Escuta comunitária e conscientização</CardDescription>
+            <CardDescription>
+              Escuta comunitária e conscientização
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
-               <div className="text-center">
-                <p className="text-3xl font-bold text-purple-600">{data.acoes.conscientizacao}</p>
+              <div className="text-center">
+                <p className="text-3xl font-bold text-purple-600">
+                  {data.acoes.conscientizacao}
+                </p>
                 <p className="text-xs text-slate-500 mt-1">Conscientização</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-purple-600">{data.acoes.escutas}</p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {data.acoes.escutas}
+                </p>
                 <p className="text-xs text-slate-500 mt-1">Escutas</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-purple-600">{data.acoes.campanhas}</p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {data.acoes.campanhas}
+                </p>
                 <p className="text-xs text-slate-500 mt-1">Campanhas</p>
               </div>
             </div>
@@ -242,9 +273,16 @@ export function SermulherView({ data }: SermulherViewProps) {
 
         <Card>
           <CardHeader>
-             <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
                   <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
                 </svg>
@@ -258,12 +296,27 @@ export function SermulherView({ data }: SermulherViewProps) {
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-slate-50 rounded-2xl">
-                <span className="text-sm text-slate-600 font-medium">Curso Cuidador de Idosos</span>
-                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">{data.capacitacoes.cursoCuidador} part.</span>
+                <span className="text-sm text-slate-600 font-medium">
+                  Curso Cuidador de Idosos
+                </span>
+                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
+                  {data.capacitacoes.cursoCuidador} part.
+                </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-slate-50 rounded-2xl">
-                <span className="text-sm text-slate-600 font-medium">Feira Centro Vivo</span>
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">{data.capacitacoes.feiraExpositoras} expos.</span>
+                <div className="flex flex-col">
+                  <span className="text-sm text-slate-600 font-medium">
+                    Feira Centro Vivo
+                  </span>
+                  {data.capacitacoes.centroVivoData ? (
+                    <span className="text-xs text-slate-500">
+                      Data: {data.capacitacoes.centroVivoData}
+                    </span>
+                  ) : null}
+                </div>
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
+                  {data.capacitacoes.feiraExpositoras} expos.
+                </span>
               </div>
             </div>
           </CardContent>
@@ -276,23 +329,33 @@ export function SermulherView({ data }: SermulherViewProps) {
             <CardTitle className="text-xl font-bold text-slate-900">
               Serviços Prestados
             </CardTitle>
-            <CardDescription>
-              Volume quantitativo por área
-            </CardDescription>
+            <CardDescription>Volume quantitativo por área</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
               <div className="p-4 bg-purple-50 rounded-3xl text-center">
-                <p className="text-xs text-purple-600 font-bold uppercase tracking-wider">Social</p>
-                <p className="text-2xl font-bold text-purple-900 mt-1">{data.servicos.sociais}</p>
+                <p className="text-xs text-purple-600 font-bold uppercase tracking-wider">
+                  Social
+                </p>
+                <p className="text-2xl font-bold text-purple-900 mt-1">
+                  {data.servicos.sociais}
+                </p>
               </div>
               <div className="p-4 bg-blue-50 rounded-3xl text-center">
-                <p className="text-xs text-blue-600 font-bold uppercase tracking-wider">Psico</p>
-                <p className="text-2xl font-bold text-blue-900 mt-1">{data.servicos.psicologicos}</p>
+                <p className="text-xs text-blue-600 font-bold uppercase tracking-wider">
+                  Psico
+                </p>
+                <p className="text-2xl font-bold text-blue-900 mt-1">
+                  {data.servicos.psicologicos}
+                </p>
               </div>
               <div className="p-4 bg-pink-50 rounded-3xl text-center">
-                <p className="text-xs text-pink-600 font-bold uppercase tracking-wider">Jurídico</p>
-                <p className="text-2xl font-bold text-pink-900 mt-1">{data.servicos.juridicos}</p>
+                <p className="text-xs text-pink-600 font-bold uppercase tracking-wider">
+                  Jurídico
+                </p>
+                <p className="text-2xl font-bold text-pink-900 mt-1">
+                  {data.servicos.juridicos}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -303,23 +366,32 @@ export function SermulherView({ data }: SermulherViewProps) {
             <CardTitle className="text-xl font-bold text-slate-900">
               Distribuição Relativa
             </CardTitle>
-            <CardDescription>Frequência percentual das modalidades</CardDescription>
+            <CardDescription>
+              Frequência percentual das modalidades
+            </CardDescription>
           </CardHeader>
           <CardContent>
-             <div className="h-40">
+            <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data.servicos.distribuicao}>
-                   <XAxis dataKey="name" hide />
-                   <Tooltip />
-                   <Bar dataKey="value" radius={[10, 10, 0, 0]}>
+                  <XAxis dataKey="name" hide />
+                  <Tooltip />
+                  <Bar dataKey="value" radius={[10, 10, 0, 0]}>
                     {data.servicos.distribuicao.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={SERVICOS_COLORS[index % SERVICOS_COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={SERVICOS_COLORS[index % SERVICOS_COLORS.length]}
+                      />
                     ))}
-                    <LabelList dataKey="value" position="top" formatter={(v: any) => `${v}%`} />
-                   </Bar>
+                    <LabelList
+                      dataKey="value"
+                      position="top"
+                      formatter={(value: number | string) => `${value}%`}
+                    />
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
-             </div>
+            </div>
           </CardContent>
         </Card>
       </div>
