@@ -87,9 +87,9 @@ export const DATA_JAN_2026: DashboardData = {
   },
   sermulher: {
     ouvidoria: {
-      totalHistorico: 61,
+      totalHistorico: 56,
       series: [
-        { month: "Jan 2025", value: 31 },
+        { month: "2025", value: 26 },
         { month: "Jan 2026", value: 30 },
       ],
     },
@@ -151,11 +151,11 @@ export const DATA_FEV_2026: DashboardData = {
   },
   sermulher: {
     ouvidoria: {
-      totalHistorico: 100,
+      totalHistorico: 94,
       series: [
-        { month: "2025", value: 32 },
-        { month: "JAN 2026", value: 30 },
-        { month: "FEV 2026", value: 38 },
+        { month: "2025", value: 26 },
+        { month: "Jan 2026", value: 30 },
+        { month: "Fev 2026", value: 38 },
       ],
     },
     salaAzul: {
@@ -211,12 +211,12 @@ export const DATA_MAR_2026: DashboardData = {
   },
   sermulher: {
     ouvidoria: {
-      totalHistorico: 100,
+      totalHistorico: 94,
       series: [
-        { month: "2025", value: 32 },
-        { month: "JAN 2026", value: 30 },
-        { month: "FEV 2026", value: 38 },
-        { month: "MAR 2026", value: 0 },
+        { month: "2025", value: 26 },
+        { month: "Jan 2026", value: 30 },
+        { month: "Fev 2026", value: 38 },
+        { month: "Mar 2026", value: 0 },
       ],
     },
     salaAzul: {
