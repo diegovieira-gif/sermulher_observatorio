@@ -47,33 +47,20 @@ type DirectusDashboard = {
   ser_capacitacoes_centro_vivo_data: string | null;
 };
 
-type DirectusCramAtendimentoPsicologico = {
-  dashboard_id: DirectusRelation;
-  nome: string;
-  valor: number | string;
-  ordem: number;
+/**
+ * Linha de série (atendimentos psicológicos, orientações jurídicas,
+ * ouvidoria, serviços). As quatro coleções têm o mesmo formato no Directus,
+ * que é o que o editor do SIGMA (sermulher_gestao) grava: ligadas ao
+ * PERÍODO, não ao dashboard.
+ */
+type DirectusSerie = {
+  periodo_id: DirectusRelation;
+  serie_nome: string | null;
+  valor: number | string | null;
+  ordem: number | null;
 };
 
-type DirectusCramOrientacaoJuridicaDistribuicao = {
-  dashboard_id: DirectusRelation;
-  label: string;
-  valor: number | string;
-  ordem: number;
-};
-
-type DirectusSermulherOuvidoriaSerie = {
-  dashboard_id: DirectusRelation;
-  month_label: string;
-  valor: number | string;
-  ordem: number;
-};
-
-type DirectusSermulherServicoDistribuicao = {
-  dashboard_id: DirectusRelation;
-  name: string;
-  value: number | string;
-  ordem: number;
-};
+const SERIE_FIELDS = "periodo_id,serie_nome,valor,ordem";
 
 const DASHBOARD_FIELDS = [
   "id",
@@ -194,30 +181,33 @@ async function fetchDirectusCollectionSafe<T>(
   }
 }
 
-function groupByDashboardId<
-  T extends { dashboard_id: DirectusRelation; ordem: number },
->(rows: T[]): Map<string, T[]> {
-  const grouped = new Map<string, T[]>();
+function groupByPeriodoId(rows: DirectusSerie[]): Map<string, DirectusSerie[]> {
+  const grouped = new Map<string, DirectusSerie[]>();
 
   for (const row of rows) {
-    const dashboardId = relationId(row.dashboard_id);
-    if (!dashboardId) {
+    const periodoId = relationId(row.periodo_id);
+    if (!periodoId) {
       continue;
     }
 
-    const currentRows = grouped.get(dashboardId) ?? [];
+    const currentRows = grouped.get(periodoId) ?? [];
     currentRows.push(row);
-    grouped.set(dashboardId, currentRows);
+    grouped.set(periodoId, currentRows);
   }
 
-  for (const rowsByDashboard of grouped.values()) {
-    rowsByDashboard.sort(
+  for (const rowsByPeriodo of grouped.values()) {
+    rowsByPeriodo.sort(
       (first, second) => toNumber(first.ordem) - toNumber(second.ordem),
     );
   }
 
   return grouped;
 }
+
+const serieItems = (rows: DirectusSerie[] | undefined) =>
+  (rows ?? [])
+    .filter((row) => row.serie_nome)
+    .map((row) => ({ nome: String(row.serie_nome), value: toNumber(row.valor) }));
 
 export async function getDashboardDataMap(): Promise<DashboardDataMap> {
   const directusUrl =
@@ -266,55 +256,53 @@ export async function getDashboardDataMap(): Promise<DashboardDataMap> {
       return HISTORICO_DADOS;
     }
 
-    const dashboardIds = dashboards.map((dashboard) => dashboard.id);
-
     const [
       cramAtendimentosPsicologicos,
       cramOrientacoesJuridicasDistribuicao,
       sermulherOuvidoriaSeries,
       sermulherServicosDistribuicao,
     ] = await Promise.all([
-      fetchDirectusCollectionSafe<DirectusCramAtendimentoPsicologico>(
+      fetchDirectusCollectionSafe<DirectusSerie>(
         directusUrl,
         directusToken,
         "obser_cram_atendimentos_psicologicos",
         {
-          fields: "dashboard_id,nome,valor,ordem",
-          sort: "dashboard_id,ordem",
-          "filter[dashboard_id][_in]": dashboardIds.join(","),
+          fields: SERIE_FIELDS,
+          sort: "ordem",
+          "filter[periodo_id][_in]": periodoIds.join(","),
           limit: "-1",
         },
       ),
-      fetchDirectusCollectionSafe<DirectusCramOrientacaoJuridicaDistribuicao>(
+      fetchDirectusCollectionSafe<DirectusSerie>(
         directusUrl,
         directusToken,
         "obser_cram_orientacoes_juridicas_distribuicao",
         {
-          fields: "dashboard_id,label,valor,ordem",
-          sort: "dashboard_id,ordem",
-          "filter[dashboard_id][_in]": dashboardIds.join(","),
+          fields: SERIE_FIELDS,
+          sort: "ordem",
+          "filter[periodo_id][_in]": periodoIds.join(","),
           limit: "-1",
         },
       ),
-      fetchDirectusCollectionSafe<DirectusSermulherOuvidoriaSerie>(
+      fetchDirectusCollectionSafe<DirectusSerie>(
         directusUrl,
         directusToken,
         "obser_sermulher_ouvidoria_series",
         {
-          fields: "dashboard_id,month_label,valor,ordem",
-          sort: "dashboard_id,ordem",
-          "filter[dashboard_id][_in]": dashboardIds.join(","),
+          fields: SERIE_FIELDS,
+          sort: "ordem",
+          "filter[periodo_id][_in]": periodoIds.join(","),
           limit: "-1",
         },
       ),
-      fetchDirectusCollectionSafe<DirectusSermulherServicoDistribuicao>(
+      fetchDirectusCollectionSafe<DirectusSerie>(
         directusUrl,
         directusToken,
         "obser_sermulher_servicos_distribuicao",
         {
-          fields: "dashboard_id,name,value,ordem",
-          sort: "dashboard_id,ordem",
-          "filter[dashboard_id][_in]": dashboardIds.join(","),
+          fields: SERIE_FIELDS,
+          sort: "ordem",
+          "filter[periodo_id][_in]": periodoIds.join(","),
           limit: "-1",
         },
       ),
@@ -328,16 +316,14 @@ export async function getDashboardDataMap(): Promise<DashboardDataMap> {
       }
     }
 
-    const cramPsicoByDashboard = groupByDashboardId(
-      cramAtendimentosPsicologicos,
-    );
-    const cramJuridicoByDashboard = groupByDashboardId(
+    const cramPsicoByPeriodo = groupByPeriodoId(cramAtendimentosPsicologicos);
+    const cramJuridicoByPeriodo = groupByPeriodoId(
       cramOrientacoesJuridicasDistribuicao,
     );
-    const sermulherOuvidoriaByDashboard = groupByDashboardId(
+    const sermulherOuvidoriaByPeriodo = groupByPeriodoId(
       sermulherOuvidoriaSeries,
     );
-    const sermulherServicosByDashboard = groupByDashboardId(
+    const sermulherServicosByPeriodo = groupByPeriodoId(
       sermulherServicosDistribuicao,
     );
 
@@ -354,39 +340,26 @@ export async function getDashboardDataMap(): Promise<DashboardDataMap> {
         continue;
       }
 
-      const dashboardId = dashboard.id;
       const periodLabel = dashboard.period_label || periodo.nome_periodo;
       const fallbackData =
         HISTORICO_DADOS[periodLabel as keyof typeof HISTORICO_DADOS] ??
         HISTORICO_DADOS[periodo.nome_periodo as keyof typeof HISTORICO_DADOS];
 
-      const cramAtendimentosPsicologicosItems = (
-        cramPsicoByDashboard.get(dashboardId) ?? []
-      ).map((item) => ({
-        name: item.nome,
-        value: toNumber(item.valor),
-      }));
+      const cramAtendimentosPsicologicosItems = serieItems(
+        cramPsicoByPeriodo.get(periodo.id),
+      ).map((item) => ({ name: item.nome, value: item.value }));
 
-      const cramJuridicoDistribuicaoItems = (
-        cramJuridicoByDashboard.get(dashboardId) ?? []
-      ).map((item) => ({
-        label: item.label,
-        value: toNumber(item.valor),
-      }));
+      const cramJuridicoDistribuicaoItems = serieItems(
+        cramJuridicoByPeriodo.get(periodo.id),
+      ).map((item) => ({ label: item.nome, value: item.value }));
 
-      const sermulherOuvidoriaSeriesItems = (
-        sermulherOuvidoriaByDashboard.get(dashboardId) ?? []
-      ).map((item) => ({
-        month: item.month_label,
-        value: toNumber(item.valor),
-      }));
+      const sermulherOuvidoriaSeriesItems = serieItems(
+        sermulherOuvidoriaByPeriodo.get(periodo.id),
+      ).map((item) => ({ month: item.nome, value: item.value }));
 
-      const sermulherServicosDistribuicaoItems = (
-        sermulherServicosByDashboard.get(dashboardId) ?? []
-      ).map((item) => ({
-        name: item.name,
-        value: toNumber(item.value),
-      }));
+      const sermulherServicosDistribuicaoItems = serieItems(
+        sermulherServicosByPeriodo.get(periodo.id),
+      ).map((item) => ({ name: item.nome, value: item.value }));
 
       mappedData[periodLabel] = {
         period: periodLabel,

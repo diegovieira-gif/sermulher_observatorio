@@ -117,14 +117,18 @@ function Upsert-Dashboard {
   return $created.data.id
 }
 
+# As séries ficam ligadas ao PERÍODO (periodo_id) com serie_nome/valor/ordem —
+# o mesmo formato que o editor do SIGMA (sermulher_gestao) grava. Os dados
+# abaixo usam nome/label/month_label/name e value por legibilidade; aqui
+# tudo vira serie_nome e valor.
 function Replace-Children {
   param(
     [string]$Collection,
-    [string]$DashboardId,
+    [string]$PeriodoId,
     [array]$Rows
   )
 
-  $existing = Invoke-Directus -Method Get -Path "/items/$Collection?fields=id&filter[dashboard_id][_eq]=$DashboardId&limit=-1"
+  $existing = Invoke-Directus -Method Get -Path "/items/$Collection?fields=id&filter[periodo_id][_eq]=$PeriodoId&limit=-1"
   $existingRows = To-Array $existing.data
 
   foreach ($item in $existingRows) {
@@ -136,10 +140,13 @@ function Replace-Children {
   }
 
   foreach ($row in $Rows) {
-    $mapped = @{ dashboard_id = $DashboardId }
-
-    foreach ($property in $row.PSObject.Properties.Name) {
-      $mapped[$property] = $row.$property
+    $nome = @($row.nome, $row.label, $row.month_label, $row.name) | Where-Object { $_ } | Select-Object -First 1
+    $valor = if ($null -ne $row.valor) { $row.valor } else { $row.value }
+    $mapped = @{
+      periodo_id = $PeriodoId
+      serie_nome = $nome
+      valor = [int][math]::Round([double]$valor)
+      ordem = $row.ordem
     }
 
     Invoke-Directus -Method Post -Path "/items/$Collection" -Body $mapped | Out-Null
@@ -304,28 +311,28 @@ foreach ($entry in $seedData) {
   $dashboardId = Upsert-Dashboard -PeriodoId $periodoId -Payload $entry.dashboard
 
   try {
-    Replace-Children -Collection "obser_cram_atendimentos_psicologicos" -DashboardId $dashboardId -Rows $entry.cram_psicologicos
+    Replace-Children -Collection "obser_cram_atendimentos_psicologicos" -PeriodoId $periodoId -Rows $entry.cram_psicologicos
   }
   catch {
     Write-Output "Aviso: sem permissão ou coleção indisponível em obser_cram_atendimentos_psicologicos"
   }
 
   try {
-    Replace-Children -Collection "obser_cram_orientacoes_juridicas_distribuicao" -DashboardId $dashboardId -Rows $entry.cram_juridico_distribuicao
+    Replace-Children -Collection "obser_cram_orientacoes_juridicas_distribuicao" -PeriodoId $periodoId -Rows $entry.cram_juridico_distribuicao
   }
   catch {
     Write-Output "Aviso: sem permissão ou coleção indisponível em obser_cram_orientacoes_juridicas_distribuicao"
   }
 
   try {
-    Replace-Children -Collection "obser_sermulher_ouvidoria_series" -DashboardId $dashboardId -Rows $entry.ouvidoria_series
+    Replace-Children -Collection "obser_sermulher_ouvidoria_series" -PeriodoId $periodoId -Rows $entry.ouvidoria_series
   }
   catch {
     Write-Output "Aviso: sem permissão ou coleção indisponível em obser_sermulher_ouvidoria_series"
   }
 
   try {
-    Replace-Children -Collection "obser_sermulher_servicos_distribuicao" -DashboardId $dashboardId -Rows $entry.servicos_distribuicao
+    Replace-Children -Collection "obser_sermulher_servicos_distribuicao" -PeriodoId $periodoId -Rows $entry.servicos_distribuicao
   }
   catch {
     Write-Output "Aviso: sem permissão ou coleção indisponível em obser_sermulher_servicos_distribuicao"
